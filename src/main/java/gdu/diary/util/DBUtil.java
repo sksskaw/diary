@@ -1,4 +1,4 @@
-package gud.diary.util;
+package gdu.diary.util;
 
 import java.sql.*;
 
@@ -8,7 +8,7 @@ public class DBUtil {
 	public Connection getConnection() {
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/mall","root","root");
+			conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/diary","root","378044");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package gud.diary.filter;
+package gdu.diary.filter;
 
 import java.io.IOException;
 import javax.servlet.Filter;

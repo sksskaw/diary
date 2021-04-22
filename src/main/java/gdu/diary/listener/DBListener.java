@@ -1,4 +1,4 @@
-package gud.diary.listener;
+package gdu.diary.listener;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
