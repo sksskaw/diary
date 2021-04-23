@@ -23,19 +23,19 @@
 		</tr>
 		<tr>
 			<c:forEach var="i" begin="1" end="${totalCell}" step="1">
-					
+				<!-- 해당 달 앞의 공백 출력하기 -->
 				<c:if test="${(i - diaryMap.startBlank) < 1}">
 					<td></td>
 				</c:if>
-					
+				<!-- 달의 날짜 출력하기 -->
 				<c:if test="${(i - diaryMap.startBlank) > 0 && (i - diaryMap.startBlank) <= diaryMap.endDay}">
 					<td>${i - diaryMap.startBlank}</td>
 				</c:if>
-				
+				<!-- 해당 달 뒤의 공백 출력하기 -->
 				<c:if test="${i - diaryMap.startBlank > diaryMap.endDay}">
 					<td></td>
 				</c:if>
-				
+				<!-- 한주가 끝난 뒤 칸 넘기기 -->
 				<c:if test="${i%7 == 0}">
 					</tr><tr>
 				</c:if>
