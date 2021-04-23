@@ -29,7 +29,11 @@
 				</c:if>
 				<!-- 달의 날짜 출력하기 -->
 				<c:if test="${(i - diaryMap.startBlank) > 0 && (i - diaryMap.startBlank) <= diaryMap.endDay}">
-					<td>${i - diaryMap.startBlank}</td>
+					<td>
+						<a href="${pageContext.request.contextPath}/auth/addTodo?targetYear=${diaryMap.targetYear}&targetMonth=${diaryMap.targetMonth}">
+							${i - diaryMap.startBlank}
+						</a>
+					</td>
 				</c:if>
 				<!-- 해당 달 뒤의 공백 출력하기 -->
 				<c:if test="${i - diaryMap.startBlank > diaryMap.endDay}">
