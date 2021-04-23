@@ -19,6 +19,7 @@ public class TodoDao {
 		try {
 			stmt = conn.prepareStatement(TodoQuery.DELETE_TODO_BY_MEMBER);
 			stmt.setInt(1, memberNo);
+			System.out.println("deleteTodoByMember " + stmt);
 			returnResult = stmt.executeUpdate();
 		} finally {
 			this.dbUtil.close(null, stmt, null);

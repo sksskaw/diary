@@ -16,9 +16,13 @@
 				<div><input type="text" name="memberId"></div>
 				<div>PW : </div>
 				<div><input type="password" name="memberPw"></div>
-				<div><button type="submit">로그인</button></div>
+				<div>
+					<button type="submit">로그인</button>
+					<a href="${pageContext.request.contextPath}/signUp"><button type="button">회원가입</button></a>
+				</div>
 			</div>
 		</form>
+		
 	</c:if>
 	
 	<!-- 로그인 후 -->
