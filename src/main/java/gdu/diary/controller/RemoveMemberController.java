@@ -38,6 +38,7 @@ public class RemoveMemberController extends HttpServlet {
 			return;
 		}
 		
+		System.out.println("회원 탈퇴 완료");
 		response.sendRedirect(request.getContextPath()+"/auth/logout");
 		
 	}

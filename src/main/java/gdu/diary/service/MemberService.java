@@ -11,38 +11,21 @@ public class MemberService {
 	private MemberDao memberDao;
 	private TodoDao todoDao;
 	
-	// 아이디 중복처리 메소드
-	public String checkMemberIdByKey(String memberid) {
-		this.dbUtil = new DBUtil();
-		String returnmemberid = null;
-		this.memberDao = new MemberDao(); 
-		Connection conn = null;
-		try {
-			conn = dbUtil.getConnection();
-			returnmemberid = this.memberDao.selectMemberIdByKey(conn, memberid);
-			conn.commit();
-		} catch(SQLException e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			this.dbUtil.close(null, null, conn);
-		}
-		return returnmemberid;
-	}
-	
 	// 회원 가입 메소드
-	public int insertMemberByKey(Member member) {
+	public int addMemberByKey(Member member) {
 		this.dbUtil = new DBUtil();
-		this.memberDao = new MemberDao(); 
+		this.memberDao = new MemberDao();
 		int memberDaoResult = 0;
 		Connection conn = null;
 		
 		try {
 			conn = dbUtil.getConnection();
+			// 아이디 중복처리
+			if(this.memberDao.selectMemberIdByKey(conn, member.getMemberId()) != null) {
+				System.out.println("이미 사용중인 id입니다.");
+				conn.commit();
+				return memberDaoResult;
+			}
 			memberDaoResult = this.memberDao.insertMember(conn, member);
 			conn.commit();
 		} catch(SQLException e) {

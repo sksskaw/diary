@@ -44,20 +44,15 @@ public class SignupController extends HttpServlet {
 		member.setMemberPw(memberPw);
 		
 		// service 호출
-		if(memberService.checkMemberIdByKey(member.getMemberId()) != null) { // id가 중복이면 입력폼으로
-			System.out.println("이미 사용중인 id입니다.");
+		int result = memberService.addMemberByKey(member);
+		if(result == 0) { // DB 입력 오류 시 입력 폼으로
+			System.out.println("입력 오류");
 			response.sendRedirect(request.getContextPath() + "/signUp");
 			return;
-		} else {
-			int result = memberService.insertMemberByKey(member);
-			if(result == 0) { // DB 입력 오류 시 입력 폼으로
-				System.out.println("입력 오류");
-				response.sendRedirect(request.getContextPath() + "/signUp");
-				return;
-			}
 		}
 		
 		// 정상 입력 시 로그인 폼으로
+		System.out.println("가입 완료");
 		response.sendRedirect(request.getContextPath() + "/login");
 	}
 
