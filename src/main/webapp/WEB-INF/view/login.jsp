@@ -31,7 +31,7 @@
 		<div><a href="${pageContext.request.contextPath}/auth/logout">로그아웃</a></div>
 		<div><a href="${pageContext.request.contextPath}/auth/modifyMember">정보수정</a></div>
 		<div><a href="${pageContext.request.contextPath}/auth/removeMenber">탈퇴</a></div>
-		<div><a href="/auth/">다이어리</a></div>
+		<div><a href="${pageContext.request.contextPath}/auth/diary">다이어리</a></div>
 	</c:if>
 </body>
 </html>
