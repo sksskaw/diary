@@ -8,7 +8,8 @@ public class DBUtil {
 	public Connection getConnection() {
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/diary","root","378044");
+			conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/diary","root","root");
+			conn.setAutoCommit(false);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

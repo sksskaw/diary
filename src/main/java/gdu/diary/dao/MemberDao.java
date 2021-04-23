@@ -7,6 +7,24 @@ import gdu.diary.vo.Member;
 
 public class MemberDao {
 	private DBUtil dbUtil;
+	
+	public int deleteMemberByKey(Connection conn, Member member) throws SQLException{
+		this.dbUtil = new DBUtil();
+		int returnResult = 0;
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement(MemberQuery.DELETE_MEMBER_BY_KEY);
+			stmt.setInt(1, member.getMemberNo());
+			stmt.setString(2, member.getMemberPw());
+			returnResult = stmt.executeUpdate();
+		} finally {
+			this.dbUtil.close(null, stmt, null);
+		}
+		
+		return returnResult;
+	}
+	
 	public Member selectMemberByKey(Connection conn, Member member) throws SQLException {
 		this.dbUtil = new DBUtil();
 		Member returnMember = null;
