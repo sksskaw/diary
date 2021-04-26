@@ -60,7 +60,7 @@
 								<c:forEach var="todo" items="${diaryMap.todoList}">
 									<c:if test="${todo.todoDate == (i - diaryMap.startBlank)}">
 										<div>
-											<a href="${pageContext.request.contextPath}/auth/todoOne">${todo.todoTitle}...</a>
+											<a href="${pageContext.request.contextPath}/auth/todoOne?todoNo=${todo.todoNo}">${todo.todoTitle}...</a>
 										</div>	
 									</c:if>
 								</c:forEach>
