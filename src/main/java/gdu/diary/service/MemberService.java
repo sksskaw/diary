@@ -46,15 +46,14 @@ public class MemberService {
 		this.dbUtil = new DBUtil();
 		this.memberDao = new MemberDao(); 
 		this.todoDao = new TodoDao(); 
-		int todoDaoResult = 0;
 		int memberDaoResult = 0;
 		Connection conn = null;
 		
 		try {
 			conn = this.dbUtil.getConnection();
-			todoDaoResult = this.todoDao.deleteTodoByMember(conn, member.getMemberNo());
+			this.todoDao.deleteTodoByMember(conn, member.getMemberNo());
 			memberDaoResult = this.memberDao.deleteMemberByKey(conn, member);
-			if(memberDaoResult == 0) {
+			if(memberDaoResult == 0) { // 비밀번호 틀렸을 경우
 				conn.rollback();
 			}
 			conn.commit();
@@ -69,7 +68,7 @@ public class MemberService {
 		}
 		
 		// 트랜잭션이 정상으로 처리되었으면 -> todoDao, memberDao 두 값이 모두 1이상 이여야함
-		return (todoDaoResult * memberDaoResult) > 0;
+		return memberDaoResult == 1;
 	}
 	
 	// 회원 정보 가져오기
