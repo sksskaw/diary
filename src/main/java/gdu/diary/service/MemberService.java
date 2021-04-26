@@ -19,7 +19,7 @@ public class MemberService {
 		Connection conn = null;
 		
 		try {
-			conn = dbUtil.getConnection();
+			conn = this.dbUtil.getConnection();
 			// 아이디 중복처리
 			if(this.memberDao.selectMemberIdByKey(conn, member.getMemberId()) != null) {
 				System.out.println("이미 사용중인 id입니다.");
@@ -30,6 +30,7 @@ public class MemberService {
 			conn.commit();
 		} catch(SQLException e) {
 			try {
+				e.printStackTrace();
 				conn.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
@@ -50,11 +51,14 @@ public class MemberService {
 		Connection conn = null;
 		
 		try {
-			conn = dbUtil.getConnection();
+			conn = this.dbUtil.getConnection();
 			todoDaoResult = this.todoDao.deleteTodoByMember(conn, member.getMemberNo());
 			memberDaoResult = this.memberDao.deleteMemberByKey(conn, member);
+			if(memberDaoResult == 0) {
+				conn.rollback();
+			}
 			conn.commit();
-		} catch(SQLException e) {
+		} catch(Exception e) {
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
@@ -64,8 +68,8 @@ public class MemberService {
 			this.dbUtil.close(null, null, conn);
 		}
 		
-		// 트랜잭션이 정상으로 처리되었으면 -> todoDao, memberDao 결과값이 모두 0,0이 아니라면
-		return (todoDaoResult + memberDaoResult) > 0;
+		// 트랜잭션이 정상으로 처리되었으면 -> todoDao, memberDao 두 값이 모두 1이상 이여야함
+		return (todoDaoResult * memberDaoResult) > 0;
 	}
 	
 	// 회원 정보 가져오기
@@ -74,8 +78,9 @@ public class MemberService {
 		Member returnMember = null;
 		this.memberDao = new MemberDao(); 
 		Connection conn = null;
+		
 		try {
-			conn = dbUtil.getConnection();
+			conn = this.dbUtil.getConnection();
 			returnMember = this.memberDao.selectMemberByKey(conn, member);
 			conn.commit();
 		} catch(SQLException e) {
@@ -89,5 +94,30 @@ public class MemberService {
 			this.dbUtil.close(null, null, conn);
 		}
 		return returnMember;
+	}
+	
+	// 비밀번호 수정 메소드
+	public int modifyMemberByKey(Member member) {
+		this.dbUtil = new DBUtil();
+		int returnResult = 0;
+		this.memberDao = new MemberDao(); 
+		Connection conn = null;
+		
+		try {
+			conn = this.dbUtil.getConnection();
+			returnResult = this.memberDao.updateMemberPwByKey(conn, member);
+			conn.commit();
+		} catch(SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			this.dbUtil.close(null, null, conn);
+		}
+		
+		return returnResult;
 	}
 }

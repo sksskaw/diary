@@ -88,4 +88,23 @@ public class MemberDao {
 		}
 		return returnMemberId;
 	}
+	
+	// 비밀번호 수정 메소드
+	public int updateMemberPwByKey(Connection conn, Member member) throws SQLException {
+		this.dbUtil = new DBUtil();
+		int returnResult = 0;
+		PreparedStatement stmt = null;
+
+		try {
+			stmt = conn.prepareStatement(MemberQuery.UPDATE_MEMBER_PW);
+			stmt.setString(1, member.getMemberPw());
+			stmt.setInt(2, member.getMemberNo());
+			System.out.println("updateMemberPwByKey " + stmt);
+			returnResult = stmt.executeUpdate();
+		} finally {
+			this.dbUtil.close(null, stmt, null);
+		}
+		
+		return returnResult;
+	}
 }
