@@ -31,15 +31,15 @@
 		<h3>${diaryMap.targetYear}년 ${diaryMap.targetMonth+1}월</h3>
 		<a href="${pageContext.request.contextPath}/auth/diary?targetYear=${diaryMap.targetYear}&targetMonth=${diaryMap.targetMonth-1}">이전달</a>
 		<a href="${pageContext.request.contextPath}/auth/diary?targetYear=${diaryMap.targetYear}&targetMonth=${diaryMap.targetMonth+1}">다음달</a>
-		<table border="1" width="90%">
+		<table class="table">
 			<tr>
-				<td>일</td>
-				<td>월</td>
-				<td>화</td>
-				<td>수</td>
-				<td>목</td>
-				<td>금</td>
-				<td>토</td>
+				<th>일</th>
+				<th>월</th>
+				<th>화</th>
+				<th>수</th>
+				<th>목</th>
+				<th>금</th>
+				<th>토</th>
 			</tr>
 			<tr>
 				<c:forEach var="i" begin="1" end="${totalCell}" step="1">
@@ -50,16 +50,25 @@
 					<!-- 달의 날짜 출력하기 -->
 					<c:if test="${(i - diaryMap.startBlank) > 0 && (i - diaryMap.startBlank) <= diaryMap.endDay}">
 						<td>
-							<div>
+							<div class="form-group">
 								<a href="${pageContext.request.contextPath}/auth/addTodo?year=${diaryMap.targetYear}&month=${diaryMap.targetMonth}&day=${i - diaryMap.startBlank}">
 									${i - diaryMap.startBlank}
 								</a>
+								<!-- 휴일 출력하기 -->
+								<c:forEach var="holidayList" items="${holidayList}">
+									<c:if test="${holidayList.locdate == (i - diaryMap.startBlank)}">
+										<div>
+											${holidayList.dateName}
+										</div>
+									</c:if>
+								</c:forEach>
 							</div>
 							
-							<div>
+							<!-- 일정 출력하기 -->
+							<div class="form-group">
 								<c:forEach var="todo" items="${diaryMap.todoList}">
 									<c:if test="${todo.todoDate == (i - diaryMap.startBlank)}">
-										<div>
+										<div class="form-group">
 											<a href="${pageContext.request.contextPath}/auth/todoOne?todoNo=${todo.todoNo}">${todo.todoTitle}...</a>
 										</div>	
 									</c:if>
