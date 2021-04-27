@@ -37,7 +37,9 @@ public class TodoDao {
 				list.add(todo);
 			}
 		} finally {
-			rs.close();
+			if(rs != null) {
+				rs.close();
+			}
 			stmt.close();
 		}
 		return list;
@@ -99,12 +101,15 @@ public class TodoDao {
 				returnTodo.setTodoFontColor(rs.getString("todo_font_color"));
 			}
 		} finally {
-			rs.close();
+			if(rs != null) {
+				rs.close();
+			}
 			stmt.close();
 		}
 		return returnTodo;
 	}
 	
+	// 일정 수정 메소드
 	public int updateTodo(Connection conn, Todo todo) throws SQLException{
 		this.dbUtil = new DBUtil();
 		int returnResult = 0;
@@ -125,6 +130,7 @@ public class TodoDao {
 		return returnResult;
 	}
 	
+	// 일정 삭제 메소드
 	public int deleteTodoOne(Connection conn, int todoNo) throws SQLException{
 		this.dbUtil = new DBUtil();
 		int returnResult = 0;
@@ -140,5 +146,31 @@ public class TodoDao {
 		}
 		
 		return returnResult;
+	}
+	
+	// d-day 리스트 가져오기
+	public List<Map<String, Object>> selectTodoDdayList(Connection conn, int memberNo) throws SQLException {
+		List<Map<String, Object>> list = new ArrayList<>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(TodoQuery.SELECT_TODO_DDAY_LIST);
+			stmt.setInt(1, memberNo);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("todoNo", rs.getInt("todoNo"));
+				map.put("todoDate", rs.getString("todoDate"));
+				map.put("todoTitle", rs.getString("todoTitle"));
+				map.put("dday", rs.getInt("dday"));
+				list.add(map);
+			}
+		} finally {
+			if(rs != null) {
+				rs.close();
+			}
+			stmt.close();
+		}
+		return list;
 	}
 }

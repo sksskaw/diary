@@ -27,6 +27,25 @@
 	
 	<!-- main content -->
 	<div class="container">
+	
+		<h1>DDAY List</h1>
+		<div>
+			<table border="1">
+				<tr><th>todoDate</th><th>todoTitle</th><th>dday</th></tr>
+				<c:forEach var="m" items="${diaryMap.ddayList}">
+					<tr>
+						<td>${m.todoDate.substring(0,10)}</td>
+						<td>
+							<a href="${pageContext.request.contextPath}/auth/todoOne?todoNo=${m.todoNo}">
+								${m.todoTitle}
+							</a>
+						</td>
+						<td>D-${m.dday}</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</div>
+	
 		<c:set var="totalCell" value="${diaryMap.startBlank + diaryMap.endDay + diaryMap.endBlank}"></c:set>
 		<h3>${diaryMap.targetYear}년 ${diaryMap.targetMonth+1}월</h3>
 		<a href="${pageContext.request.contextPath}/auth/diary?targetYear=${diaryMap.targetYear}&targetMonth=${diaryMap.targetMonth-1}">이전달</a>
@@ -58,7 +77,7 @@
 								<c:forEach var="holidayList" items="${holidayList}">
 									<c:if test="${holidayList.locdate == (i - diaryMap.startBlank)}">
 										<div>
-											${holidayList.dateName}
+											<span style="color:red">${holidayList.dateName}</span>
 										</div>
 									</c:if>
 								</c:forEach>
@@ -69,7 +88,7 @@
 								<c:forEach var="todo" items="${diaryMap.todoList}">
 									<c:if test="${todo.todoDate == (i - diaryMap.startBlank)}">
 										<div class="form-group">
-											<a href="${pageContext.request.contextPath}/auth/todoOne?todoNo=${todo.todoNo}">${todo.todoTitle}...</a>
+											<a href="${pageContext.request.contextPath}/auth/todoOne?todoNo=${todo.todoNo}"><span style="color:${todo.todoFontColor}">${todo.todoTitle}...</span></a>
 										</div>	
 									</c:if>
 								</c:forEach>

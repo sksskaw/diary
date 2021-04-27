@@ -73,7 +73,7 @@ public class DiaryController extends HttpServlet {
 		
 		String apiURI = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?"; // 공휴일 요청
 		String encodingKey="serviceKey=ttfhwH%2FrVrtXytNIhRm2ubOFIWS4DzeHjRW%2F%2B%2F%2FA3dHFhrGoJ90pDWrkWKflhOwdDENX%2BUMy4QmMcUGWzqlhkA%3D%3D";
-		String decodingKey="ttfhwH/rVrtXytNIhRm2ubOFIWS4DzeHjRW/+//A3dHFhrGoJ90pDWrkWKflhOwdDENX+UMy4QmMcUGWzqlhkA==";
+		//String decodingKey="ttfhwH/rVrtXytNIhRm2ubOFIWS4DzeHjRW/+//A3dHFhrGoJ90pDWrkWKflhOwdDENX+UMy4QmMcUGWzqlhkA==";
 		BufferedReader br = null;
 		
 		try {
