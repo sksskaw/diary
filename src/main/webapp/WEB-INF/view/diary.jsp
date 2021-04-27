@@ -24,7 +24,7 @@
 	      	 <li><a href="${pageContext.request.contextPath}/auth/diary">다이어리</a></li>
 	      </ul>
 	</nav>
-	
+
 	<!-- main content -->
 	<div class="container">
 	
@@ -108,5 +108,6 @@
 			</tr>
 		</table>
 	</div>
+	
 </body>
 </html>
