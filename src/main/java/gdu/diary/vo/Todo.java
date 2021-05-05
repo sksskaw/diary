@@ -43,4 +43,9 @@ public class Todo {
 	public void setTodoFontColor(String todoFontColor) {
 		this.todoFontColor = todoFontColor;
 	}
+	@Override
+	public String toString() {
+		return "Todo [todoNo=" + todoNo + ", memberNo=" + memberNo + ", todoDate=" + todoDate + ", todoTitle="
+				+ todoTitle + ", todoContent=" + todoContent + ", todoFontColor=" + todoFontColor + "]";
+	}
 }

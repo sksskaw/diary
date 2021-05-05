@@ -1,16 +1,12 @@
 package gdu.diary.service;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
 import gdu.diary.dao.TodoDao;
-import gdu.diary.util.DBUtil;
 import gdu.diary.vo.Todo;
 
 public class DiaryService {
 	
-	private DBUtil dbUtil;
 	private TodoDao todoDao;
 	
 	// 달력 출력 정보 가져오기
@@ -47,33 +43,13 @@ public class DiaryService {
 		
 		// 2. targetYear,targetMonth(0이면 1월, 1이면 2월)에 해당하는 todo목록 가져와서 추가
 		// 3. d-day 리스트 가져오기
-		this.dbUtil = new DBUtil();
 		this.todoDao = new TodoDao();
 		List<Todo> todoList = null; // todo 목록
-		List<Map<String, Object>> ddayList = null; // d-day 목록
-		Connection conn = null;		
-		try {
-			conn = this.dbUtil.getConnection();
-			todoList = this.todoDao.selectTodoListByDate(conn, memberNo, target.get(Calendar.YEAR), target.get(Calendar.MONTH)+1);
-			ddayList = this.todoDao.selectTodoDdayList(conn, memberNo);
-			conn.commit();
-		} catch (SQLException e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		
+		List<Map<String, String>> ddayList = null; // d-day 목록
+
+		todoList = this.todoDao.selectTodoListByDate(memberNo, target.get(Calendar.YEAR), target.get(Calendar.MONTH)+1);
+		ddayList = this.todoDao.selectTodoDdayList(memberNo);
+
 		returnMap.put("todoList", todoList);
 		returnMap.put("ddayList", ddayList);
 

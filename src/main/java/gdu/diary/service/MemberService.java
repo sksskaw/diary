@@ -1,14 +1,11 @@
 package gdu.diary.service;
 
-import java.sql.*;
 import java.util.List;
 
 import gdu.diary.dao.*;
-import gdu.diary.util.DBUtil;
 import gdu.diary.vo.*;
 
 public class MemberService {
-	private DBUtil dbUtil;
 	private MemberDao memberDao;
 	
 	// 회원 가입 메소드 Create

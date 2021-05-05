@@ -3,10 +3,6 @@ package gdu.diary.controller;
 import java.io.IOException;
 import java.util.*;
 
-import java.io.BufferedReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +25,7 @@ public class DiaryController extends HttpServlet {
 
 	private DiaryService diaryService;
 	
-	// XML 테그값 가져오기
+	// XML 테그값 가져오는 메소드
 	private static String getTagValue(String tag, Element ele) {
 
         NodeList nodeList = ele.getElementsByTagName(tag).item(0).getChildNodes();

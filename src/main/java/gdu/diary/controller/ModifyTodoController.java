@@ -21,7 +21,10 @@ public class ModifyTodoController extends HttpServlet {
 		
 		todoService = new TodoService();
 		Todo todo = new Todo();
-		todo = todoService.getTodoOne(todoNo);
+		
+		if(todoService.getTodoOne(todoNo).size() != 0) {
+			todo = todoService.getTodoOne(todoNo).get(0);
+		}
 		
 		request.setAttribute("todo", todo);
 		request.getRequestDispatcher("/WEB-INF/view/modifyTodo.jsp").forward(request, response);
@@ -48,7 +51,10 @@ public class ModifyTodoController extends HttpServlet {
 			return;
 		}
 		
-		todo = todoService.getTodoOne(todoNo);
+		if(todoService.getTodoOne(todoNo).size() != 0) {
+			todo = todoService.getTodoOne(todoNo).get(0);
+		}
+		
 		request.setAttribute("todo", todo);
 		request.getRequestDispatcher("/WEB-INF/view/todoOne.jsp").forward(request, response);
 	}

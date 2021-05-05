@@ -1,9 +1,5 @@
 package gdu.diary.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 import org.apache.ibatis.session.SqlSession;
@@ -15,55 +11,29 @@ public class TodoDao {
 	private DBUtil dbUtil;
 	
 	// 해당 달에 있는 모든 일정 가져오기
-	public List<Todo> selectTodoListByDate(Connection conn, int memberNo, int targetYear, int targetMonth) throws SQLException {
-		List<Todo> list = new ArrayList<>();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			/*
-			 * SELECT todo_no todoNo, LEFT(todo_title, 10) todoTitle FROM todo 
-			 * WHERE member_no=? AND YEAR(todo_date)=? AND MONTH(todo_date)=?
-			 */
-			stmt = conn.prepareStatement(TodoQuery.SELECT_TODO_LIST_BY_DATE);
-			stmt.setInt(1, memberNo);
-			stmt.setInt(2, targetYear);
-			stmt.setInt(3, targetMonth);
-			System.out.println("selectTodoListByDate " + stmt);
-			rs = stmt.executeQuery();
-			while(rs.next()) {
-				Todo todo = new Todo();
-				todo.setTodoNo(rs.getInt("todoNo"));
-				todo.setTodoDate(rs.getString("todoDate"));
-				todo.setTodoTitle(rs.getString("todoTitle"));
-				todo.setTodoFontColor(rs.getString("todoFontColor"));
-				list.add(todo);
-			}
-		} finally {
-			if(rs != null) {
-				rs.close();
-			}
-			stmt.close();
-		}
-		return list;
+	public List<Todo> selectTodoListByDate(int memberNo, int targetYear, int targetMonth) {
+		this.dbUtil = new DBUtil();
+		
+		// SQL 파라미터의 값을 Map으로 묶어서 객체를 넘겨준다. 
+		Map<String, Integer> map = new HashMap<>();
+		map.put("memberNo", memberNo);
+		map.put("targetYear", targetYear);
+		map.put("targetMonth", targetMonth);
+		
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		return sqlSession.selectList("gdu.diary.dao.TodoMapper.selectTodoListByDate",map);
 	}
 	
 	// 일정 추가
-	public int insertTodo(Connection conn, Todo todo) throws SQLException {
-		int rowCnt = 0;
-		PreparedStatement stmt = null;
-		try {
-			stmt = conn.prepareStatement(TodoQuery.INSERT_TODO);
-			stmt.setInt(1, todo.getMemberNo());
-			stmt.setString(2, todo.getTodoDate());
-			stmt.setString(3, todo.getTodoTitle());
-			stmt.setString(4, todo.getTodoContent());
-			stmt.setString(5, todo.getTodoFontColor());
-			System.out.println("insertTodo " + stmt);
-			rowCnt = stmt.executeUpdate();
-		} finally {
-			stmt.close();
-		}
-		return rowCnt;
+	public int insertTodo(Todo todo){
+		this.dbUtil = new DBUtil();
+		int result = 0;
+		
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.insert("gdu.diary.dao.TodoMapper.insertTodo",todo);
+		sqlSession.commit();
+		
+		return result;
 	}
 	
 	// 일정 삭제(회원탈퇴 시 해당 계정이 작성한 모든 일정 삭제) MemberService에서 호출
@@ -81,93 +51,40 @@ public class TodoDao {
 	}
 	
 	// 일정 상세정보 가져오기
-	public Todo selectTodoOne(Connection conn, int todoNo) throws SQLException {
-		Todo returnTodo = new Todo();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = conn.prepareStatement(TodoQuery.SELECT_TODO_ONE_BY_KEY);
-			stmt.setInt(1, todoNo);
-			System.out.println("selectTodoOne " + stmt);
-			rs = stmt.executeQuery();
-			if(rs.next()) {
-				returnTodo.setTodoNo(rs.getInt("todo_no"));
-				returnTodo.setTodoDate(rs.getString("todo_date"));
-				returnTodo.setTodoTitle(rs.getString("todo_title"));
-				returnTodo.setTodoContent(rs.getString("todo_content"));
-				returnTodo.setTodoFontColor(rs.getString("todo_font_color"));
-			}
-		} finally {
-			if(rs != null) {
-				rs.close();
-			}
-			stmt.close();
-		}
-		return returnTodo;
+	public List<Todo> selectTodoOne(int todoNo){
+		this.dbUtil = new DBUtil();
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		return sqlSession.selectList("gdu.diary.dao.TodoMapper.selectTodoOne",todoNo);
 	}
 	
 	// 일정 수정 메소드
-	public int updateTodo(Connection conn, Todo todo) throws SQLException{
+	public int updateTodo(Todo todo){
 		this.dbUtil = new DBUtil();
-		int returnResult = 0;
-		PreparedStatement stmt = null;
+		int result = 0;
 		
-		try {
-			stmt = conn.prepareStatement(TodoQuery.UPDATE_TODO_ONE_BY_KEY);
-			stmt.setString(1, todo.getTodoTitle());
-			stmt.setString(2, todo.getTodoContent());
-			stmt.setString(3, todo.getTodoFontColor());
-			stmt.setInt(4, todo.getTodoNo());
-			System.out.println("UpdateTodo " + stmt);
-			returnResult = stmt.executeUpdate();
-		} finally {
-			this.dbUtil.close(null, stmt, null);
-		}
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.update("gdu.diary.dao.TodoMapper.updateTodo",todo);
+		sqlSession.commit();
 		
-		return returnResult;
+		return result;
 	}
 	
 	// 일정 삭제 메소드
-	public int deleteTodoOne(Connection conn, int todoNo) throws SQLException{
+	public int deleteTodoOne(int todoNo){
 		this.dbUtil = new DBUtil();
-		int returnResult = 0;
-		PreparedStatement stmt = null;
+		int result = 0;
 		
-		try {
-			stmt = conn.prepareStatement(TodoQuery.DELETE_TODO_ONE_BY_MEMBER);
-			stmt.setInt(1, todoNo);
-			System.out.println("deleteTodoOne " + stmt);
-			returnResult = stmt.executeUpdate();
-		} finally {
-			this.dbUtil.close(null, stmt, null);
-		}
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.delete("gdu.diary.dao.TodoMapper.deleteTodoOne",todoNo);
+		sqlSession.commit();
 		
-		return returnResult;
+		return result;
 	}
 	
 	// d-day 리스트 가져오기
-	public List<Map<String, Object>> selectTodoDdayList(Connection conn, int memberNo) throws SQLException {
-		List<Map<String, Object>> list = new ArrayList<>();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = conn.prepareStatement(TodoQuery.SELECT_TODO_DDAY_LIST);
-			stmt.setInt(1, memberNo);
-			rs = stmt.executeQuery();
-			while(rs.next()) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("todoNo", rs.getInt("todoNo"));
-				map.put("todoDate", rs.getString("todoDate"));
-				map.put("todoTitle", rs.getString("todoTitle"));
-				map.put("dday", rs.getInt("dday"));
-				list.add(map);
-			}
-		} finally {
-			if(rs != null) {
-				rs.close();
-			}
-			stmt.close();
-		}
-		return list;
+	public List<Map<String, String>> selectTodoDdayList(int memberNo) {
+		this.dbUtil = new DBUtil();
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		return sqlSession.selectList("gdu.diary.dao.TodoMapper.selectTodoDdayList",memberNo);
 	}
 }

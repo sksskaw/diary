@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import gdu.diary.service.TodoService;
-import gdu.diary.vo.Todo;
 
 @WebServlet("/auth/deleteTodo")
 public class DeleteTodoController extends HttpServlet {

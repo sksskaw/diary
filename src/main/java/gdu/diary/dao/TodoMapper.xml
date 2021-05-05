@@ -8,4 +8,37 @@
 		DELETE FROM todo WHERE member_no = #{memberNo}
 	</delete>
 	
+	<insert id="insertTodo" parameterType="gdu.diary.vo.Todo">
+		INSERT INTO todo(member_no, todo_date, todo_title, todo_content, todo_font_color, todo_add_date) 
+		VALUES (#{memberNo}, #{todoDate}, #{todoTitle}, #{todoContent}, #{todoFontColor},NOW())
+	</insert>
+	
+	<select  id="selectTodoOne" parameterType="int" resultType="gdu.diary.vo.Todo">
+		SELECT todo_no todoNo, todo_date todoDate, todo_title todoTitle, todo_content todoContent, todo_font_color todoFontColor FROM todo WHERE todo_no = #{todoNo}
+	</select>
+	
+	<update id="updateTodo" parameterType="gdu.diary.vo.Todo">
+		UPDATE todo SET todo_title = #{todoTitle}, todo_content = #{todoContent}, todo_font_color = #{todoFontColor} WHERE todo_no = #{todoNo}
+	</update>
+	
+	<delete id="deleteTodoOne" parameterType="int">
+		DELETE FROM todo WHERE todo_no = #{todoNo}
+	</delete>
+	
+	<select id="selectTodoListByDate" parameterType="hashmap" resultType="gdu.diary.vo.Todo">
+		SELECT todo_no todoNo, DAY(todo_date) todoDate, LEFT(todo_title, 10) todoTitle, todo_font_color todoFontColor 
+		FROM todo 
+		WHERE member_no = #{memberNo} AND YEAR(todo_date) = #{targetYear} AND MONTH(todo_date) = #{targetMonth}
+	</select>
+	
+	<select id="selectTodoDdayList" parameterType="int" resultMap="selectTodoDdayList">
+		SELECT todo_no todoNo,todo_date todoDate,todo_title todoTitle,DATEDIFF(todo_date,DATE(NOW())) dday FROM todo WHERE todo_date > DATE(NOW()) AND member_no = #{memberNo} LIMIT 10
+	</select>
+	
+	<resultMap type="map" id="selectTodoDdayList"> 
+		<result column="todoNo" property="todoNo"/>
+		<result column="todoDate" property="todoDate"/> 
+		<result column="todoTitle" property="todoTitle"/> 
+		<result column="dday" property="dday"/> 
+	</resultMap>
 </mapper>

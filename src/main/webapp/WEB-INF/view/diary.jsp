@@ -40,7 +40,7 @@
 				</tr>
 				<c:forEach var="m" items="${diaryMap.ddayList}">
 					<tr>
-						<td>${m.todoDate.substring(0,10)}</td>
+						<td>${m.todoDate}</td>
 						<td>
 							<a href="${pageContext.request.contextPath}/auth/todoOne?todoNo=${m.todoNo}">
 								${m.todoTitle}
