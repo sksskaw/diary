@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import org.apache.ibatis.session.SqlSession;
+
 import gdu.diary.util.DBUtil;
 import gdu.diary.vo.*;
 
@@ -64,23 +66,18 @@ public class TodoDao {
 		return rowCnt;
 	}
 	
-	// 일정 삭제(회원탈퇴 시 해당 계정이 작성한 모든 일정 삭제)
-	public int deleteTodoByMember(Connection conn, int memberNo) throws SQLException{
+	// 일정 삭제(회원탈퇴 시 해당 계정이 작성한 모든 일정 삭제) MemberService에서 호출
+	// 트랜잭션 처리가 난해해서 member_no 외래키 옵션 ON DELETE CASCADE로 수정
+	// 해당 매소드 사용 x
+	public int deleteTodoByMember(int memberNo){
 		this.dbUtil = new DBUtil();
-		int returnResult = 0;
-		PreparedStatement stmt = null;
+		int result = 0;
 		
-		try {
-			stmt = conn.prepareStatement(TodoQuery.DELETE_TODO_BY_MEMBER);
-			stmt.setInt(1, memberNo);
-			System.out.println("deleteTodoByMember " + stmt);
-			returnResult = stmt.executeUpdate();
-		} finally {
-			this.dbUtil.close(null, stmt, null);
-		}
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.delete("gdu.diary.dao.TodoMapper.deleteTodoByMember",memberNo);
+		sqlSession.commit();
 		
-		//System.out.println("삭제된 일정 개수" + returnResult);
-		return returnResult;
+		return result;
 	}
 	
 	// 일정 상세정보 가져오기

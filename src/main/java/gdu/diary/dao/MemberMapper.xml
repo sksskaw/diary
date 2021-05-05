@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gdu.diary.dao.MemberMapper">
+
+	<insert id="insertMember" parameterType="gdu.diary.vo.Member">
+		INSERT INTO member(member_id, member_pw, member_date) VALUES(#{memberId}, PASSWORD(#{memberPw}), NOW())
+	</insert>
+
+	<select id="selectMemberIdByKey" parameterType="String" resultType="gdu.diary.vo.Member">
+		SELECT member_id memberId FROM member WHERE member_id = #{memberId}
+	</select>
+	
+	<delete id="deleteMemberByKey" parameterType="gdu.diary.vo.Member">
+		DELETE FROM member WHERE member_no = #{memberNo} AND member_pw = PASSWORD(#{memberPw})
+	</delete>
+	
+	<select id="selectMemberByKey" parameterType="gdu.diary.vo.Member" resultType="gdu.diary.vo.Member">
+		SELECT member_no memberNo, member_id memberId FROM member WHERE member_id = #{memberId} AND member_pw = PASSWORD(#{memberPw})
+	</select>
+
+	<update id="updateMemberPwByKey" parameterType="gdu.diary.vo.Member">
+		UPDATE member SET member_pw = PASSWORD(#{memberPw}) WHERE member_no = #{memberNo}
+	</update>
+</mapper>

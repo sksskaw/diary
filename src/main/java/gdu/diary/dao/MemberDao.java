@@ -1,6 +1,9 @@
 package gdu.diary.dao;
 
 import java.sql.*;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
 
 import gdu.diary.util.DBUtil;
 import gdu.diary.vo.Member;
@@ -9,102 +12,59 @@ public class MemberDao {
 	private DBUtil dbUtil;
 	
 	// 회원 가입 메소드
-	public int insertMember(Connection conn, Member member) throws SQLException{
+	public int  insertMember(Member member){
 		this.dbUtil = new DBUtil();
-		int returnResult = 0;
-		PreparedStatement stmt = null;
+		int result = 0;
 		
-		try {
-			stmt = conn.prepareStatement(MemberQuery.INSERT_MEMBER_BY_KEY);
-			stmt.setString(1, member.getMemberId());
-			stmt.setString(2, member.getMemberPw());
-			System.out.println("insertMember " + stmt);
-			returnResult = stmt.executeUpdate();
-		} finally {
-			this.dbUtil.close(null, stmt, null);
-		}
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.insert("gdu.diary.dao.MemberMapper.insertMember",member);
+		sqlSession.commit();
 		
-		return returnResult;
+		return result;
 	}
 	
 	// 회원 탈퇴 메소드
-	public int deleteMemberByKey(Connection conn, Member member) throws SQLException{
+	public int deleteMemberByKey(Member member){
 		this.dbUtil = new DBUtil();
-		int returnResult = 0;
-		PreparedStatement stmt = null;
+		int result = 0;
 		
-		try {
-			stmt = conn.prepareStatement(MemberQuery.DELETE_MEMBER_BY_KEY);
-			stmt.setInt(1, member.getMemberNo());
-			stmt.setString(2, member.getMemberPw());
-			System.out.println("deleteMemberByKey " + stmt);
-			returnResult = stmt.executeUpdate();
-		} finally {
-			this.dbUtil.close(null, stmt, null);
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.delete("gdu.diary.dao.MemberMapper.deleteMemberByKey",member);
+		if(result == 0) {
+			System.out.println("비밀번호가 틀렸습니다.");
+			return 0;
 		}
+		sqlSession.commit();
 		
-		return returnResult;
+		return result;
 	}
 	
 	// 회원 정보 가져오기
-	public Member selectMemberByKey(Connection conn, Member member) throws SQLException {
+	public List<Member> selectMemberByKey(Member member){
+
 		this.dbUtil = new DBUtil();
-		Member returnMember = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = conn.prepareStatement(MemberQuery.SELECT_MEMBER_BY_KEY);
-			stmt.setString(1, member.getMemberId());
-			stmt.setString(2, member.getMemberPw());
-			System.out.println("selectMemberByKey " + stmt);
-			rs = stmt.executeQuery();
-			if(rs.next()) {
-				returnMember = new Member();
-				returnMember.setMemberNo(rs.getInt("memberNo"));
-				returnMember.setMemberId(rs.getString("memberId"));
-			}
-		} finally {
-			this.dbUtil.close(rs, stmt, null);
-		}
-		return returnMember;
+		
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		return sqlSession.selectList("gdu.diary.dao.MemberMapper.selectMemberByKey",member);
 	}
 	
 	// id 중복처리를 위한 메소드
-	public String selectMemberIdByKey(Connection conn, String MemberId) throws SQLException {
+	public List<Member> selectMemberIdByKey(String memberId){
 		this.dbUtil = new DBUtil();
-		String returnMemberId = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = conn.prepareStatement(MemberQuery.SELECT_MEMBER_ID_BY_KEY);
-			stmt.setString(1, MemberId);
-			System.out.println("selectMemberIdByKey " + stmt);
-			rs = stmt.executeQuery();
-			if(rs.next()) {
-				returnMemberId = rs.getString("memberId");
-			}
-		} finally {
-			this.dbUtil.close(rs, stmt, null);
-		}
-		return returnMemberId;
+		
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		return sqlSession.selectList("gdu.diary.dao.MemberMapper.selectMemberIdByKey",memberId);
 	}
 	
 	// 비밀번호 수정 메소드
-	public int updateMemberPwByKey(Connection conn, Member member) throws SQLException {
+	public int updateMemberPwByKey(Member member){
 		this.dbUtil = new DBUtil();
-		int returnResult = 0;
-		PreparedStatement stmt = null;
-
-		try {
-			stmt = conn.prepareStatement(MemberQuery.UPDATE_MEMBER_PW);
-			stmt.setString(1, member.getMemberPw());
-			stmt.setInt(2, member.getMemberNo());
-			System.out.println("updateMemberPwByKey " + stmt);
-			returnResult = stmt.executeUpdate();
-		} finally {
-			this.dbUtil.close(null, stmt, null);
-		}
+		int result = 0;
 		
-		return returnResult;
+		SqlSession sqlSession = this.dbUtil.getSqlSession();
+		result = sqlSession.update("gdu.diary.dao.MemberMapper.updateMemberPwByKey",member);
+		sqlSession.commit();
+		
+		return result;
 	}
 }

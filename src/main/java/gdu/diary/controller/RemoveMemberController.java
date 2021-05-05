@@ -31,8 +31,8 @@ public class RemoveMemberController extends HttpServlet {
 		member.setMemberPw(memberPw);
 		
 		this.memberService = new MemberService();
-		boolean result = this.memberService.removeMemberByKey(member);
-		if(result == false) {
+		int result = this.memberService.removeMemberByKey(member);
+		if(result == 0) {
 			System.out.println("회원탈퇴 실패!");
 			response.sendRedirect(request.getContextPath()+"/auth/removeMenber");
 			return;

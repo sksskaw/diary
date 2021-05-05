@@ -1,6 +1,8 @@
 package gdu.diary.controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,15 +30,17 @@ public class LoginController extends HttpServlet {
 		member.setMemberId(memberId);
 		member.setMemberPw(memberPw);
 		// System.out.println(member);
-		Member returnMember = this.memberService.getMemberByKey(member);
-		if(returnMember == null) {
+		
+		List<Member> returnMember = this.memberService.getMemberByKey(member);
+		
+		if(returnMember.size() == 0) {
 			System.out.println("가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.");
 			response.sendRedirect(request.getContextPath()+"/login");
 			return;
 		} else {
 			System.out.println("로그인 성공");
 			HttpSession session = request.getSession();
-			session.setAttribute("sessionMember", returnMember);
+			session.setAttribute("sessionMember", returnMember.get(0)); // returnMember.size()가 0이 아니면 무조건 값은 하나. 기본키로 검색했기 때문에
 		}
 		response.sendRedirect(request.getContextPath()+"/auth/diary");
 	}

@@ -1,6 +1,8 @@
 package gdu.diary.controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,8 +37,9 @@ public class ModifyMemberController extends HttpServlet {
 		member.setMemberPw(currentPassword);
 		
 		// 입력한 현재 비밀번호가 맞는지 확인
-		Member returnMember = this.memberService.getMemberByKey(member);
-		if(returnMember == null) {
+		List<Member> returnMember = this.memberService.getMemberByKey(member);
+		
+		if(returnMember.size() == 0) {
 			System.out.println("잘못된 비밀번호입니다.");
 			response.sendRedirect(request.getContextPath()+"/auth/modifyMember");
 			return;
